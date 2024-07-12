@@ -1,23 +1,32 @@
-import logo from './logo.svg';
+
+"use client";
+import React from "react";
 import './App.css';
+import TodoStatus from "./components/TodoStatus";
+import TodoList from "./components/TodoList";
+import Form from "./components/Form";
 
 function App() {
+  const [todos, setTodos] = React.useState([]);
+
+  // Retrieve data from localStorage when component mounts
+  React.useEffect(() => {
+    const storedTodos = localStorage.getItem("todos");
+    if (storedTodos) {
+      setTodos(JSON.parse(storedTodos));
+    }
+  }, []);
+
+  const todos_completed = todos.filter(
+    (todo) => todo.is_completed === true
+  ).length;
+  const total_todos = todos.length;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="wrapper">
+      <TodoStatus todos_completed={todos_completed} total_todos={total_todos} />
+      <Form todos={todos} setTodos={setTodos} />
+      <TodoList todos={todos} setTodos={setTodos} />
     </div>
   );
 }
